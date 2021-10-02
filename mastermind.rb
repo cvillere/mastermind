@@ -6,7 +6,8 @@ colors = ["red", "blue", "green", "purple", "orange", "yellow"]
 -have computer generate a random list of colors
 -Display number of guesses left
 -prompt user for guess
--player guesses that list
+-player makes a guess
+-computer generates an answer
 -check players guess to make sure it matches format
 ---split on commas
 ---make all letters downcase
@@ -25,11 +26,22 @@ class MasterMind
   @@max_guesses = 12
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
-  attr_accessor :num_guesses_rem :player_guess
+  attr_accessor :num_guesses_rem :player_guess :computer_answer
 
   def init
     @num_guesses_rem = num_guesses_rem
     @player_guess = player_guess
+    @computer_answer = computer_answer
+  end
+
+  def computer_answer
+    computer_answer = []
+    until computer_answer.length >= 4 do
+      new_color = @@colors[rand(6)]
+      if computer_answer.include?(new_color) === false
+        computer_answer.push(new_color)
+      end
+    end
   end
 
   def get_player_guess
@@ -44,6 +56,7 @@ class MasterMind
     else
       puts 'Incorrect guess format! Please check guess & try again'
       player_guess = gets.chomp
+    end
   end
 
   def display_guesses_rem
