@@ -33,8 +33,17 @@ class MasterMind
   end
 
   def get_player_guess
-    puts 'What is your guess?(i.e. red blue green purple)'
+    puts 'What is your guess?(ex. red blue green purple)'
     player_guess = gets.chomp
+  end
+
+  def check_guess_format
+    guess_for_mat = /[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}/
+    if player_guess =~ guess_for_mat
+      # execute a turn
+    else
+      puts 'Incorrect guess format! Please check guess & try again'
+      player_guess = gets.chomp
   end
 
   def display_guesses_rem
