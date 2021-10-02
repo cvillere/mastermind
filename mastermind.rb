@@ -24,9 +24,20 @@ that weren't is returned/shown
 class MasterMind
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
-  attr_accessor :num_guesses_rem
+  attr_accessor :num_guesses_rem :player_guess
 
   def init
     @num_guesses_rem = num_guesses_rem
+    @player_guess = player_guess
   end
+
+  def get_player_guess
+  end
+
+  def display_guesses_rem
+    puts num_guesses_rem
+  end
+
+
+
 end
