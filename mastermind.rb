@@ -22,6 +22,7 @@ that weren't is returned/shown
 
 # initial game project
 class MasterMind
+  @@max_guesses = 12
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
   attr_accessor :num_guesses_rem :player_guess
@@ -32,6 +33,8 @@ class MasterMind
   end
 
   def get_player_guess
+    puts 'What is your guess?(i.e. red blue green purple)'
+    player_guess = gets.chomp
   end
 
   def display_guesses_rem
