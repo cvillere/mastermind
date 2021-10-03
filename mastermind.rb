@@ -38,25 +38,33 @@ class MasterMind
     computer_answer = []
     until computer_answer.length >= 4 do
       new_color = @@colors[rand(6)]
-      if computer_answer.include?(new_color) === false
-        computer_answer.push(new_color)
+      computer_answer.push(new_color)
       end
     end
+    computer_answer
   end
 
   def get_player_guess
     puts 'What is your guess?(ex. red blue green purple)'
-    player_guess = gets.chomp
+    @player_guess = gets.chomp
   end
 
   def check_guess_format
     guess_for_mat = /[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}/
-    if player_guess =~ guess_for_mat
-      # execute a turn
-    else
+    while (@player_guess =~ guess_for_mat) == nil
       puts 'Incorrect guess format! Please check guess & try again'
-      player_guess = gets.chomp
+      @player_guess = gets.chomp
     end
+    @player_guess
+  end
+
+  def compare_guess_answer
+    player_guess_array = @player_guess.split(" ")
+
+  end
+
+  def provide_feedback
+
   end
 
   def display_guesses_rem
