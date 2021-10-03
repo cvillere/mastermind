@@ -34,7 +34,7 @@ class MasterMind
     @computer_answer = computer_answer
   end
 
-  def computer_answer
+  def gener_computer_answer
     computer_answer = []
     until computer_answer.length >= 4 do
       new_color = @@colors[rand(6)]
@@ -53,14 +53,19 @@ class MasterMind
     guess_for_mat = /[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}/
     while (@player_guess =~ guess_for_mat) == nil
       puts 'Incorrect guess format! Please check guess & try again'
-      @player_guess = gets.chomp
-    end
+      @player_guess = gets.chomp.downcase
     @player_guess
   end
 
   def compare_guess_answer
+    feedback_array = []
     player_guess_array = @player_guess.split(" ")
+    player_guess_array.each do |p|
+      gener_computer_answer.each do |q|
+        if p == q
 
+
+    end
   end
 
   def provide_feedback
