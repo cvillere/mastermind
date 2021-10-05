@@ -44,9 +44,12 @@ class MasterMind
     computer_answer
   end
 
+  $comp_answer = gener_computer_answer()
+  
+
   def get_player_guess
     puts 'What is your guess?(ex. red blue green purple)'
-    @player_guess = gets.chomp
+    @player_guess = gets.chomp.split(" ")
   end
 
   def check_guess_format
@@ -54,15 +57,30 @@ class MasterMind
     while (@player_guess =~ guess_for_mat) == nil
       puts 'Incorrect guess format! Please check guess & try again'
       @player_guess = gets.chomp.downcase
+    end
     @player_guess
   end
 
   def compare_guess_answer
     feedback_array = []
-    player_guess_array = @player_guess.split(" ")
+    
     player_guess_array.each do |p|
-      gener_computer_answer.each do |q|
+      $comp_answer.each do |q|
         if p == q
+          feedback_array.push(p)
+        else
+          feedback_array.push(" ")
+        end
+      end
+    end
+    feedback_array
+  end
+
+  def check_answer_position
+    comp_answer_copy = $comp_answer
+    .each do |item|
+      if item == " "
+          
 
 
     end
