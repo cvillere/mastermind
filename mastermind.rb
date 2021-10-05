@@ -45,23 +45,25 @@ class MasterMind
   end
 
   $comp_answer = gener_computer_answer()
+  $player_guess = check_guess_format()
 
 
   def check_guess_format
     puts 'What is your guess?(ex. red blue green purple)'
-    @player_guess = gets.chomp
+    $player_guess = gets.chomp
     guess_format = /[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}/
-    while (@player_guess =~ guess_format) == nil
+    while ($player_guess =~ guess_format) == nil
       puts 'Incorrect guess format! Please check guess & try again'
-      @player_guess = gets.chomp.downcase
+      $player_guess = gets.chomp.downcase
     end
-    @player_guess
+    $player_guess.split(" ")
   end
+
+
 
   def compare_guess_answer
     feedback_array = []
-    
-    check_guess_format().each do |p|
+    $player_guess.each do |p|
       $comp_answer.each do |q|
         if p == q
           feedback_array.push(p)
@@ -76,7 +78,7 @@ class MasterMind
   def check_answer_position
     comp_answer_copy = $comp_answer
     direct_index_comp = compare_guess_answer()
-    @player_guess.each do |item|
+    player_guess.each do |item|
       if item == " "
           
 
