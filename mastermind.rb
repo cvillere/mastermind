@@ -26,12 +26,10 @@ class MasterMind
   @@max_guesses = 12
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
-  attr_accessor :num_guesses_rem :player_guess :computer_answer
+  attr_accessor :num_guesses_rem
 
   def init
     @num_guesses_rem = num_guesses_rem
-    @player_guess = player_guess
-    @computer_answer = computer_answer
   end
 
   def gener_computer_answer
@@ -46,6 +44,7 @@ class MasterMind
 
   $comp_answer = gener_computer_answer()
   $player_guess = check_guess_format()
+  
 
 
   def check_guess_format
@@ -66,6 +65,7 @@ class MasterMind
     $player_guess.each do |p|
       $comp_answer.each do |q|
         if p == q
+          q == " "
           feedback_array.push(p)
         else
           feedback_array.push(" ")
@@ -76,11 +76,18 @@ class MasterMind
   end
 
   def check_answer_position
+    feedback = compare_guess_answer()
     comp_answer_copy = $comp_answer
-    direct_index_comp = compare_guess_answer()
-    player_guess.each do |item|
-      if item == " "
-          
+    $player_guess.each do |item, index|
+      if comp_answer_copy.includes?(item)
+        index_val = comp_answer_copy.index(item)
+        comp_answer_copy[index_val] = " "
+        feedback[index] = "wp"
+      end
+    end
+    feedback
+  end
+        
 
 
     end
