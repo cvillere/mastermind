@@ -78,8 +78,8 @@ class MasterMind
   def check_answer_position
     feedback = compare_guess_answer()
     comp_answer_copy = $comp_answer
-    $player_guess.each do |item, index|
-      if comp_answer_copy.includes?(item)
+    $player_guess.each_with_index do |item, index|
+      if comp_answer_copy.include?(item)
         index_val = comp_answer_copy.index(item)
         comp_answer_copy[index_val] = " "
         feedback[index] = "wp"
