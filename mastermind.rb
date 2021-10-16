@@ -62,36 +62,32 @@ class MasterMind
 
   def compare_guess_answer
     feedback_array = []
-    $player_guess.each do |p|
-      $comp_answer.each do |q|
-        if p == q
-          q == " "
+    $player_guess.each_with_index do |p, index|
+        if $player_guess[index] == $comp_answer[index]
+          $comp_answer[index] == " "
           feedback_array.push(p)
         else
           feedback_array.push(" ")
         end
       end
+      feedback_array
     end
-    feedback_array
-  end
 
-  def check_answer_position
-    feedback = compare_guess_answer()
-    comp_answer_copy = $comp_answer
-    $player_guess.each_with_index do |item, index|
-      if comp_answer_copy.include?(item)
-        index_val = comp_answer_copy.index(item)
-        comp_answer_copy[index_val] = " "
-        feedback[index] = "wp"
+    def check_answer_position
+      feedback = compare_guess_answer()
+      comp_answer_copy = $comp_answer
+      $player_guess.each_with_index do |item, index|
+        if comp_answer_copy.include?(item)
+          index_val = comp_answer_copy.index(item)
+          comp_answer_copy[index_val] = " "
+          if feedback[index] == " "
+            feedback[index] = "wp"
+          end
+        end
       end
+      feedback
     end
-    feedback
-  end
-        
 
-
-    end
-  end
 
   def provide_feedback
 
@@ -100,7 +96,5 @@ class MasterMind
   def display_guesses_rem
     puts num_guesses_rem
   end
-
-
 
 end
