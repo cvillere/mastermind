@@ -37,7 +37,6 @@ class MasterMind
     until computer_answer.length >= 4 do
       new_color = @@colors[rand(6)]
       computer_answer.push(new_color)
-      end
     end
     computer_answer
   end
@@ -49,13 +48,13 @@ class MasterMind
 
   def check_guess_format
     puts 'What is your guess?(ex. red blue green purple)'
-    $player_guess = gets.chomp
+    player_guess = gets.chomp
     guess_format = /[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}/
-    while ($player_guess =~ guess_format) == nil
+    while (player_guess =~ guess_format) == nil
       puts 'Incorrect guess format! Please check guess & try again'
-      $player_guess = gets.chomp.downcase
+      player_guess = gets.chomp.downcase
     end
-    $player_guess.split(" ")
+    player_guess.split(" ")
   end
 
 
@@ -63,38 +62,51 @@ class MasterMind
   def compare_guess_answer
     feedback_array = []
     $player_guess.each_with_index do |p, index|
-        if $player_guess[index] == $comp_answer[index]
-          $comp_answer[index] == " "
-          feedback_array.push(p)
-        else
-          feedback_array.push(" ")
-        end
+      if $player_guess[index] == $comp_answer[index]
+        $comp_answer[index] == " "
+        feedback_array.push(p)
+      else
+        feedback_array.push(" ")
       end
-      feedback_array
     end
-
-    def check_answer_position
-      feedback = compare_guess_answer()
-      comp_answer_copy = $comp_answer
-      $player_guess.each_with_index do |item, index|
-        if comp_answer_copy.include?(item)
-          index_val = comp_answer_copy.index(item)
-          comp_answer_copy[index_val] = " "
-          if feedback[index] == " "
-            feedback[index] = "wp"
-          end
-        end
-      end
-      feedback
-    end
-
-
-  def provide_feedback
-
+    feedback_array
   end
 
-  def display_guesses_rem
-    puts num_guesses_rem
+
+  def check_answer_position
+    feedback = compare_guess_answer()
+    comp_answer_copy = $comp_answer
+    $player_guess.each_with_index do |item, index|
+      if comp_answer_copy.include?(item)
+        index_val = comp_answer_copy.index(item)
+        comp_answer_copy[index_val] = " "
+        if feedback[index] == " "
+          feedback[index] = "wp"
+        end
+      end
+    end
+    feedback
+  end
+
+  def provide_feedback
+    p check_answer_position
+    @num_guesses_rem = @@max_guesses - 1
+    p @num_guesses_rem
+  end
+end
+
+class ExecuteMasterMind < MasterMind
+  def play_game
+    @@max_guesses.zero?
+      gener_computer_answer
+      check_guess_format
+      compare_guess_answer
+      check_answer_position
+      provide_feedback
   end
 
 end
+
+my_game = ExecuteMasterMind.new
+my_game.play_game
+
