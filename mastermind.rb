@@ -26,25 +26,22 @@ class MasterMind
   @@max_guesses = 12
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
-  attr_accessor :num_guesses_rem
+  attr_accessor :num_guesses_rem :comp_answer :player_guess
 
   def init
     @num_guesses_rem = num_guesses_rem
+    @com_answer = gener_computer_answer
+    @player_guess = check_guess_format
   end
 
   def gener_computer_answer
     computer_answer = []
-    until computer_answer.length >= 4 do
+    until computer_answer.length >= 4
       new_color = @@colors[rand(6)]
       computer_answer.push(new_color)
     end
     computer_answer
   end
-
-  $comp_answer = gener_computer_answer()
-  $player_guess = check_guess_format()
-  
-
 
   def check_guess_format
     puts 'What is your guess?(ex. red blue green purple)'
@@ -57,12 +54,11 @@ class MasterMind
     player_guess.split(" ")
   end
 
-
-
   def compare_guess_answer
     feedback_array = []
-    $player_guess.each_with_index do |p, index|
-      if $player_guess[index] == $comp_answer[index]
+    player_guess = check_guess_format
+    player_guess.each_with_index do |p, index|
+      if player_guess[index] == $comp_answer[index]
         $comp_answer[index] == " "
         feedback_array.push(p)
       else
@@ -96,17 +92,20 @@ class MasterMind
 end
 
 class ExecuteMasterMind < MasterMind
-  def play_game
-    @@max_guesses.zero?
-      gener_computer_answer
-      check_guess_format
-      compare_guess_answer
-      check_answer_position
-      provide_feedback
-  end
 
+  @@comp_answer = gener_computer_answer
+  @@player_guess = check_guess_format
+
+
+  def play_game
+    gener_computer_answer
+    check_guess_format
+    compare_guess_answer
+    check_answer_position
+    provide_feedback
+    end
+  end
 end
 
 my_game = ExecuteMasterMind.new
 my_game.play_game
-
