@@ -1,4 +1,5 @@
 # Project to build the mastermind game for Odin Project
+require 'pry'
 
 =begin
 colors = ["red", "blue", "green", "purple", "orange", "yellow"]
@@ -21,63 +22,62 @@ that weren't is returned/shown
 -
 =end
 
+
 # initial game project
 class MasterMind
   @@max_guesses = 12
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
-  attr_accessor :num_guesses_rem :comp_answer :player_guess
+  attr_accessor :num_guesses_rem, :comp_answer, :player_guess
 
   def init
     @num_guesses_rem = num_guesses_rem
-    @com_answer = gener_computer_answer
+    @comp_answer = gener_computer_answer
     @player_guess = check_guess_format
   end
 
   def gener_computer_answer
-    computer_answer = []
-    until computer_answer.length >= 4
+    @comp_answer = []
+    until @comp_answer.length >= 4
       new_color = @@colors[rand(6)]
-      computer_answer.push(new_color)
+      @comp_answer.push(new_color)
     end
-    computer_answer
+    @comp_answer
   end
 
   def check_guess_format
     puts 'What is your guess?(ex. red blue green purple)'
-    player_guess = gets.chomp
+    @player_guess = gets.chomp
     guess_format = /[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}/
-    while (player_guess =~ guess_format) == nil
+    while (@player_guess =~ guess_format) == nil
       puts 'Incorrect guess format! Please check guess & try again'
-      player_guess = gets.chomp.downcase
+      @player_guess = gets.chomp.downcase
     end
-    player_guess.split(" ")
+    @player_guess.split(" ").to_a
   end
 
   def compare_guess_answer
     feedback_array = []
-    player_guess = check_guess_format
-    player_guess.each_with_index do |p, index|
-      if player_guess[index] == $comp_answer[index]
-        $comp_answer[index] == " "
+    @player_guess.each_with_index do |p, index|
+      if @player_guess[index] == @comp_answer[index]
+        @comp_answer[index] == ' '
         feedback_array.push(p)
       else
-        feedback_array.push(" ")
+        feedback_array.push(' ')
       end
     end
     feedback_array
   end
 
-
   def check_answer_position
     feedback = compare_guess_answer()
-    comp_answer_copy = $comp_answer
-    $player_guess.each_with_index do |item, index|
+    comp_answer_copy = @comp_answer
+    @player_guess.each_with_index do |item, index|
       if comp_answer_copy.include?(item)
         index_val = comp_answer_copy.index(item)
-        comp_answer_copy[index_val] = " "
-        if feedback[index] == " "
-          feedback[index] = "wp"
+        comp_answer_copy[index_val] = ' '
+        if feedback[index] == ' '
+          feedback[index] = 'wp'
         end
       end
     end
@@ -85,25 +85,26 @@ class MasterMind
   end
 
   def provide_feedback
-    p check_answer_position
-    @num_guesses_rem = @@max_guesses - 1
-    p @num_guesses_rem
+    check_answer_position
+    if check_answer_position == @comp_answer
+      puts 'You have won the game'
+      exit
+    else
+      @num_guesses_rem = @@max_guesses - 1
+      p "your number of guesses remaining equals: #{@num_guesses_rem}"
+    end
   end
 end
 
 class ExecuteMasterMind < MasterMind
 
-  @@comp_answer = gener_computer_answer
-  @@player_guess = check_guess_format
-
-
   def play_game
-    gener_computer_answer
+    #until @player_guess == @comp_answer
     check_guess_format
     compare_guess_answer
+    binding.pry
     check_answer_position
     provide_feedback
-    end
   end
 end
 
