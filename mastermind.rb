@@ -88,7 +88,7 @@ class MasterMind
     if player == computer
       puts 'You have won the game'
       exit
-    elsif feedback != computer_answer && @@max_guesses = 0
+    elsif player != computer && @@max_guesses == 0
       puts "You Lost!"
       exit
     else
@@ -109,19 +109,21 @@ class ExecuteMasterMind < MasterMind
     initial_guess_feedback = provide_feedback(second_comparison, computer_response)
   end
 
-  def continue_game(feedback, computer_answer)
-    while feedback != computer_answer
-      if feedback == computer_answer
+  # You are stuck in an infinite loop when calling this function below
+  def continue_game(computer_answer)
+    game_play = play_game(computer_answer)
+    while game_play != computer_answer
+      if game_play == computer_answer
         puts 'You have won the game'
         exit
-      elsif feedback != computer_answer && @@max_guesses = 0
+      elsif game_play != computer_answer && @@max_guesses == 0
         puts "You Lost!"
         exit
       else
         @num_guesses_rem = @@max_guesses - 1
         puts "your number of guesses remaining equals: #{@num_guesses_rem}"
       end
-      feedback
+      game_play = play_game(computer_answer)
     end
   end
 end
@@ -129,10 +131,9 @@ end
 
 my_game = ExecuteMasterMind.new
 computer_answ = my_game.gener_computer_answer
-game = my_game.play_game(computer_answ)
-=begin
-my_game.continue_game(game, computer_answ)
-=end
+# game = my_game.play_game(computer_answ)
+my_game.continue_game(computer_answ)
+
 
 
 =begin
