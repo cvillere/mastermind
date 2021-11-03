@@ -35,12 +35,12 @@ class MasterMind
 
 
   def gener_computer_answer
-    comp_answer = []
-    until comp_answer.length >= 4
+    comp = []
+    until comp.length >= 4
       new_color = @@colors[rand(6)]
-      comp_answer.push(new_color)
+      comp.push(new_color)
     end
-    comp_answer
+    comp
   end
 
   def check_guess_format
@@ -98,14 +98,11 @@ end
 
 class ExecuteMasterMind < MasterMind
 
-  def get_computer_answer
-    comp_answer = gener_computer_answer
-  end
-
-  def play_game(computer)
+  def play_game(computer_answ)
     player_guess = check_guess_format
-    first_comparison = compare_guess_answer(player_guess, computer)
-    second_comparison = check_answer_position(first_comparison, computer, player_guess)
+    computer_answ = gener_computer_answer
+    first_comparison = compare_guess_answer(player_guess, computer_answ)
+    second_comparison = check_answer_position(first_comparison, computer_answ, player_guess)
   end
 
   def continue_game(feedback, computer_answer)
@@ -125,7 +122,6 @@ end
 
 
 my_game = ExecuteMasterMind.new
-computer_answ = my_game.get_computer_answer
 game = my_game.play_game(computer_answ)
 =begin
 my_game.continue_game(game, computer_answ)
