@@ -88,40 +88,47 @@ class MasterMind
     if player == computer
       puts 'You have won the game'
       exit
+    elsif feedback != computer_answer && @@max_guesses = 0
+      puts "You Lost!"
+      exit
     else
       @num_guesses_rem = @@max_guesses - 1
-      p "your number of guesses remaining equals: #{@num_guesses_rem}"
+      puts "your number of guesses remaining equals: #{@num_guesses_rem}"
     end
   end
+
 end
 
 
 class ExecuteMasterMind < MasterMind
 
-  def play_game(computer_answ)
+  def play_game(computer_response)
     player_guess = check_guess_format
-    computer_answ = gener_computer_answer
-    first_comparison = compare_guess_answer(player_guess, computer_answ)
-    second_comparison = check_answer_position(first_comparison, computer_answ, player_guess)
+    first_comparison = compare_guess_answer(player_guess, computer_response)
+    second_comparison = check_answer_position(first_comparison, computer_response, player_guess)
+    initial_guess_feedback = provide_feedback(second_comparison, computer_response)
   end
 
   def continue_game(feedback, computer_answer)
-    play_game(computer_answer)
-    if feedback == computer_answer
-      puts 'You have won the game'
-      exit
-    elsif feedback != computer_answer
-      @num_guesses_rem = @@max_guesses - 1
-      puts "your number of guesses remaining equals: #{@num_guesses_rem}"
-      play_game(computer_answer)
-    elsif feedback != computer_answer && @@max_guesses = 0
-      puts "You Lost!"
+    while feedback != computer_answer
+      if feedback == computer_answer
+        puts 'You have won the game'
+        exit
+      elsif feedback != computer_answer && @@max_guesses = 0
+        puts "You Lost!"
+        exit
+      else
+        @num_guesses_rem = @@max_guesses - 1
+        puts "your number of guesses remaining equals: #{@num_guesses_rem}"
+      end
+      feedback
     end
   end
 end
 
 
 my_game = ExecuteMasterMind.new
+computer_answ = my_game.gener_computer_answer
 game = my_game.play_game(computer_answ)
 =begin
 my_game.continue_game(game, computer_answ)
