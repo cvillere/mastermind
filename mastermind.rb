@@ -104,6 +104,13 @@ end
 
 class ExecuteMasterMind < MasterMind
 
+  def decrement_hash(computer, key)
+    if computer.key?(key) == true
+      computer[key] -= 1
+    end
+    p computer
+  end
+
   def create_hash(computer)
     computer_hash = {}
     computer.each do |item|
