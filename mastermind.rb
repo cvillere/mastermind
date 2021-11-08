@@ -24,7 +24,7 @@ that weren't is returned/shown
 
 # initial game project
 class MasterMind
-  @@max_guesses = 12
+  @@max_guesses = 4
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
   attr_accessor :num_guesses_rem,
@@ -44,6 +44,7 @@ class MasterMind
   end
 
   def check_guess_format
+    puts "----------------------------------------------------------------------"
     puts "What is your guess?(ex. red blue green purple). Possible choices are: #{@@colors}"
     player_guess = gets.chomp
     guess_format = /[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}/
@@ -55,35 +56,28 @@ class MasterMind
     player_guess
   end
 
-  def compare_guess_answer(player, computer, hash)
+  def compare_guess_answer(player, computer)
     feedback_array = []
     player.each_with_index do |p, index|
       if player[index] == computer[index]
-        # computer[index] == ' '
         feedback_array.push(p)
       else
         feedback_array.push(' ')
       end
     end
-    puts "Line 68 - feedback array 1st: #{feedback_array}"
     feedback_array
   end
 
-  def check_answer_position(first_comp, computer, player, hash)
+  def check_answer_position(first_comp, computer, player)
     feedback = first_comp
-    comp_answer_copy = computer
-    player_guess = player
-    player_guess.each_with_index do |item, index|
-      if comp_answer_copy.include?(item) 
-        index_val = comp_answer_copy.index(item)
-        comp_answer_copy[index_val] = ' '
-        if feedback[index] == ' '
-          feedback[index] = 'wp'
-        end
+    compare_hash = create_hash(computer)
+    player.each_with_index do |item, index|
+      if computer.include?(item) && compare_hash[item] > 0 && feedback[index] == " "
+        feedback[index] = 'wp'
+        decrement_hash(compare_hash, item)
       end
     end
-    puts "line 85 - feedback array 2nd: #{feedback}"
-    feedback
+    puts "Your feedback: #{feedback}"
   end
 
   def provide_feedback(player, computer)
@@ -99,17 +93,17 @@ class MasterMind
     end
   end
 
-end
-
-
-class ExecuteMasterMind < MasterMind
-
   def decrement_hash(computer, key)
     if computer.key?(key) == true
       computer[key] -= 1
     end
-    p computer
+    computer
   end
+
+end
+
+
+class ExecuteMasterMind < MasterMind
 
   def create_hash(computer)
     computer_hash = {}
@@ -125,39 +119,39 @@ class ExecuteMasterMind < MasterMind
 
   def play_game(computer_response)
     player_guess = check_guess_format
-    puts "line 109 - player guess: #{player_guess}"
-    puts "line 110 - computer response: #{computer_response}"
-
+    puts "this is player_guess: #{player_guess}"
+    puts "this is computer_response #{computer_response}"
     first_comparison = compare_guess_answer(player_guess, computer_response)
     second_comparison = check_answer_position(first_comparison, computer_response, player_guess)
     # initial_guess_feedback = provide_feedback(second_comparison, computer_response)
   end
 
-  # You are stuck in an infinite loop when calling this function below
   def continue_game(computer_answer)
-    game_play = play_game(computer_answer, computer_answer)
-    puts "line 120 - computer answer: #{computer_answer}"
-    while game_play != computer_answer_copy
-      if game_play == computer_answer_copy
-        puts 'You have won the game'
-        exit
-      elsif game_play != computer_answer_copy && @@max_guesses == 0
-        puts "line 127 - You Lost!"
+    game_play = play_game(computer_answer)
+    while @@max_guesses > 1
+      puts "this is max_guesses: #{@@max_guesses}"
+      if game_play == computer_answer
+        puts 'You have won the game!'
         exit
       else
-        @num_guesses_rem = @@max_guesses - 1
-        puts "line 132 - your number of guesses remaining equals: #{@num_guesses_rem}"
+        @@max_guesses -= 1
+        puts "your number of guesses remaining equals: #{@@max_guesses}"
       end
-      game_play = play_game(computer_answer, computer_answer_copy) 
+      game_play = play_game(computer_answer) 
+    end
+    @@max_guesses -= 1
+    if game_play != computer_answer && @@max_guesses == 0
+      puts "line 127 - You Lost!"
+      exit
     end
   end
 
+
 end
 
-
+# Next challenge is integrating the hash into play game and continue game functions
 my_game = ExecuteMasterMind.new
 computer_answ = my_game.gener_computer_answer
-comp_hash = my_game.create_hash(computer_answ)
 my_game.continue_game(computer_answ)
 
 
