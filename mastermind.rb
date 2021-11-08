@@ -24,7 +24,7 @@ that weren't is returned/shown
 
 # initial game project
 class MasterMind
-  @@max_guesses = 4
+  @@max_guesses = 12
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
   attr_accessor :num_guesses_rem,
@@ -80,19 +80,6 @@ class MasterMind
     puts "Your feedback: #{feedback}"
   end
 
-  def provide_feedback(player, computer)
-    if player == computer
-      puts 'You have won the game'
-      exit
-    elsif player != computer && @@max_guesses == 0
-      puts "You Lost!"
-      exit
-    else
-      @num_guesses_rem = @@max_guesses - 1
-      puts "your number of guesses remaining equals: #{@num_guesses_rem}"
-    end
-  end
-
   def decrement_hash(computer, key)
     if computer.key?(key) == true
       computer[key] -= 1
@@ -119,11 +106,8 @@ class ExecuteMasterMind < MasterMind
 
   def play_game(computer_response)
     player_guess = check_guess_format
-    puts "this is player_guess: #{player_guess}"
-    puts "this is computer_response #{computer_response}"
     first_comparison = compare_guess_answer(player_guess, computer_response)
     second_comparison = check_answer_position(first_comparison, computer_response, player_guess)
-    # initial_guess_feedback = provide_feedback(second_comparison, computer_response)
   end
 
   def continue_game(computer_answer)
