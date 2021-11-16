@@ -96,6 +96,23 @@ class MasterMind
     comp_color_new
   end
 
+  def create_new_compguess (feedback, player_a, comp_g)
+    new_guess = []
+    feedback.each_with_index do |item, index|
+      if feedback[index] == " "
+        new_guess.push(@@colors[rand(6)])
+  
+      elsif feedback[index] == "wp"
+        new_guess.push(figure_comp_wp(index))
+  
+      elsif @@colors.includes?(item)
+        new_guess.push(item)
+      end
+    end
+    $computer_guesses.push(new_guess)
+    new_guess
+  end
+
   def decrement_hash(computer, key)
     if computer.key?(key) == true
       computer[key] -= 1
