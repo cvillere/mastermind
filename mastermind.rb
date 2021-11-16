@@ -2,7 +2,7 @@ require 'pry'
 # Project to build the mastermind game for Odin Project
 
 =begin
-colors = ["red", "blue", "green", "purple", "orange", "yellow"]
+  colors = ["red", "blue", "green", "purple", "orange", "yellow"]
 
 -have computer generate a random list of colors
 -Display number of guesses left
@@ -27,10 +27,10 @@ class MasterMind
   @@max_guesses = 12
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
-  attr_accessor :num_guesses_rem,
+  attr_accessor :computer_guesses
 
   def init
-    @num_guesses_rem = 0
+    @computer_guesses = []
   end
 
 
@@ -77,7 +77,23 @@ class MasterMind
         decrement_hash(compare_hash, item)
       end
     end
+    puts "----------------------------------------"
     puts "Your feedback: #{feedback}"
+  end
+
+  def figure_comp_wp(num_index)
+    colors = ["red", "blue", "green", "purple", "orange", "yellow"]
+    previous_guesses = []
+    $computer_guesses.each_with_index do |item, index|
+      previous_guesses.push($computer_guesses[index][num_index])
+    end
+    potential_guess = colors - previous_guesses
+    if potential_guess.length == 0
+      comp_color_new = colors[rand(6)]
+    else
+      comp_color_new = potential_guess[rand(potential_guess.length)]
+    end
+    comp_color_new
   end
 
   def decrement_hash(computer, key)
