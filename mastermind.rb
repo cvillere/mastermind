@@ -1,27 +1,6 @@
 require 'pry'
 # Project to build the mastermind game for Odin Project
 
-=begin
-  colors = ["red", "blue", "green", "purple", "orange", "yellow"]
-
--have computer generate a random list of colors
--Display number of guesses left
--prompt user for guess
--player makes a guess
--computer generates an answer
--check players guess to make sure it matches format
----split on commas
----make all letters downcase
----check against a regex expression
----if ok then continue to next step
--player's guess is added to list of guesses
--list that includes the guesses that were correct and empty spots for the guesses
-that weren't is returned/shown
--display number of guesses left
--prompt user for guess
--
-=end
-
 # initial game project
 class MasterMind
   @@max_guesses = 12
@@ -56,6 +35,19 @@ class MasterMind
     player_guess
   end
 
+  def check_answer_format
+    puts "----------------------------------------------------------------------"
+    puts "Please give an answer for computer to guess.(ex. red blue green purple). Possible choices are: #{@@colors}"
+    player_guess = gets.chomp
+    guess_format = /[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}/
+    while (player_guess =~ guess_format) == nil
+      puts 'Incorrect answer format! Please check guess & try again'
+      player_guess = gets.chomp.downcase
+    end
+    player_guess = player_guess.split(" ").to_a
+    player_guess
+  end
+
   def compare_guess_answer(player, computer)
     feedback_array = []
     player.each_with_index do |p, index|
@@ -84,8 +76,8 @@ class MasterMind
   def figure_comp_wp(num_index)
     colors = ["red", "blue", "green", "purple", "orange", "yellow"]
     previous_guesses = []
-    $computer_guesses.each_with_index do |item, index|
-      previous_guesses.push($computer_guesses[index][num_index])
+    @computer_guesses.each_with_index do |item, index|
+      previous_guesses.push(@computer_guesses[index][num_index])
     end
     potential_guess = colors - previous_guesses
     if potential_guess.length == 0
@@ -96,7 +88,7 @@ class MasterMind
     comp_color_new
   end
 
-  def create_new_compguess (feedback, player_a, comp_g)
+  def create_new_compguess(feedback)
     new_guess = []
     feedback.each_with_index do |item, index|
       if feedback[index] == " "
@@ -109,7 +101,7 @@ class MasterMind
         new_guess.push(item)
       end
     end
-    $computer_guesses.push(new_guess)
+    @computer_guesses.push(new_guess)
     new_guess
   end
 
@@ -143,6 +135,33 @@ class ExecuteMasterMind < MasterMind
     second_comparison = check_answer_position(first_comparison, computer_response, player_guess)
   end
 
+  #for the computer guessing
+  def make_comp_guesser(player_answer)
+    computer_response = gener_computer_answer
+    first_comparison = compare_guess_answer(computer_response, player_answer)
+    second_comparison = check_answer_position(first_comparison, player_answer, computer_response)
+  end
+
+  def compguess_game(player_answer)
+    game_play = make_comp_guesser(player_answer)
+    while @@max_guesses > 1
+      puts "this is max_guesses: #{@@max_guesses}"
+      if game_play == computer_answer
+        puts 'You have won the game!'
+        exit
+      else
+        @@max_guesses -= 1
+        puts "your number of guesses remaining equals: #{@@max_guesses}"
+      end
+      game_play = play_game(computer_answer) 
+    end
+    @@max_guesses -= 1
+    if game_play != computer_answer && @@max_guesses == 0
+      puts "line 127 - You Lost!"
+      exit
+    end
+  end
+
   def continue_game(computer_answer)
     game_play = play_game(computer_answer)
     while @@max_guesses > 1
@@ -163,26 +182,17 @@ class ExecuteMasterMind < MasterMind
     end
   end
 
-
 end
 
-# Next challenge is integrating the hash into play game and continue game functions
 my_game = ExecuteMasterMind.new
 computer_answ = my_game.gener_computer_answer
 my_game.continue_game(computer_answ)
 
 
-
 =begin
-my_game = MasterMind.new
-player_guess = my_game.check_guess_format
-computer_answer = my_game.gener_computer_answer
-first_comparison = my_game.compare_guess_answer(player_guess, computer_answer)
-second_comparison = my_game.check_answer_position(first_comparison, computer_answer, player_guess)
-=end
+my_game = ExecuteMasterMind.new
+my_game.either_or(the function to give comp_answer or player_answer & put it into
+the correct function continue_game OR compguess_game)
 
-=begin
-compare_guess_answer
-check_answer_position
-provide_feedback
+
 =end
