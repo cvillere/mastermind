@@ -22,6 +22,20 @@ class MasterMind
     comp
   end
 
+  def start_game
+    puts "Would you like to guess the correct color combination. Answer Y or N"
+    determining_result = gets.chomp
+    check_result = /Y{1}|N{1}/
+    while (determining_result =~ check_result) == nil && determining_result.length != 1
+      puts "incorrect input! Please check guess & try again. Answer Y or N"
+      determining_result = gets.chomp
+    end
+    if determining_result == "Y"
+      gener_computer_answer
+    else
+      check_answer_format
+  end
+
   def check_guess_format
     puts "----------------------------------------------------------------------"
     puts "What is your guess?(ex. red blue green purple). Possible choices are: #{@@colors}"
@@ -142,22 +156,28 @@ class ExecuteMasterMind < MasterMind
     second_comparison = check_answer_position(first_comparison, player_answer, computer_response)
   end
 
+  def make_second_compguess(player_answer, compguess)
+    computer_response = create_new_compguess(compguess)
+    first_comparison = compare_guess_answer(computer_response, player_answer)
+    second_comparison = check_answer_position(first_comparison, player_answer, computer_response)
+  end
+
   def compguess_game(player_answer)
     game_play = make_comp_guesser(player_answer)
     while @@max_guesses > 1
       puts "this is max_guesses: #{@@max_guesses}"
-      if game_play == computer_answer
-        puts 'You have won the game!'
+      if game_play == player_answer
+        puts 'The computer has won the game!'
         exit
       else
         @@max_guesses -= 1
-        puts "your number of guesses remaining equals: #{@@max_guesses}"
+        puts "computer's number of guesses remaining equals: #{@@max_guesses}"
       end
-      game_play = play_game(computer_answer) 
+      game_play = make_second_compguess(player_answer, game_play) 
     end
     @@max_guesses -= 1
-    if game_play != computer_answer && @@max_guesses == 0
-      puts "line 127 - You Lost!"
+    if game_play != player_answer && @@max_guesses == 0
+      puts "line 127 - Computer has lost!"
       exit
     end
   end
@@ -181,7 +201,6 @@ class ExecuteMasterMind < MasterMind
       exit
     end
   end
-
 end
 
 my_game = ExecuteMasterMind.new
