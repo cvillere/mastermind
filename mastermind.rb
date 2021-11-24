@@ -26,14 +26,15 @@ class MasterMind
     puts "Would you like to guess the correct color combination. Answer Y or N"
     determining_result = gets.chomp
     check_result = /Y{1}|N{1}/
-    while (determining_result =~ check_result) == nil && determining_result.length != 1
+    while (determining_result =~ check_result) == nil || determining_result.length != 1
       puts "incorrect input! Please check guess & try again. Answer Y or N"
       determining_result = gets.chomp
     end
     if determining_result == "Y"
-      gener_computer_answer
+      continue_game(gener_computer_answer)
     else
-      check_answer_format
+      compguess_game(check_answer_format)
+    end
   end
 
   def check_guess_format
@@ -49,7 +50,7 @@ class MasterMind
     player_guess
   end
 
-  def check_answer_format
+  def check_answer_format 
     puts "----------------------------------------------------------------------"
     puts "Please give an answer for computer to guess.(ex. red blue green purple). Possible choices are: #{@@colors}"
     player_guess = gets.chomp
@@ -210,8 +211,7 @@ my_game.continue_game(computer_answ)
 
 =begin
 my_game = ExecuteMasterMind.new
-my_game.either_or(the function to give comp_answer or player_answer & put it into
-the correct function continue_game OR compguess_game)
+my_game.start_game
 
 
 =end
