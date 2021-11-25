@@ -8,7 +8,7 @@ class MasterMind
 
   attr_accessor :computer_guesses
 
-  def init
+  def initialize
     @computer_guesses = []
   end
 
