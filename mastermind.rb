@@ -86,6 +86,7 @@ class MasterMind
     end
     puts "----------------------------------------"
     puts "Your feedback: #{feedback}"
+    feedback
   end
 
   def figure_comp_wp(num_index)
@@ -204,14 +205,12 @@ class ExecuteMasterMind < MasterMind
   end
 end
 
+=begin
 my_game = ExecuteMasterMind.new
 computer_answ = my_game.gener_computer_answer
 my_game.continue_game(computer_answ)
+=end
 
 
-=begin
 my_game = ExecuteMasterMind.new
 my_game.start_game
-
-
-=end
