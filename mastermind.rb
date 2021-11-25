@@ -113,7 +113,7 @@ class MasterMind
       elsif feedback[index] == "wp"
         new_guess.push(figure_comp_wp(index))
   
-      elsif @@colors.includes?(item)
+      elsif @@colors.include?(item)
         new_guess.push(item)
       end
     end
