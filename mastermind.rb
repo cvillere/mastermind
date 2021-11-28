@@ -1,4 +1,3 @@
-require 'pry'
 # Project to build the mastermind game for Odin Project
 
 # initial game project
@@ -19,6 +18,16 @@ class MasterMind
       new_color = @@colors[rand(6)]
       comp.push(new_color)
     end
+    comp
+  end
+
+  def gener_computer_guess
+    comp = []
+    until comp.length >= 4
+      new_color = @@colors[rand(6)]
+      comp.push(new_color)
+    end
+    @computer_guesses.push(comp)
     comp
   end
 
@@ -78,6 +87,7 @@ class MasterMind
   def check_answer_position(first_comp, computer, player)
     feedback = first_comp
     compare_hash = create_hash(computer)
+    dec_initial_hash(compare_hash, player)
     player.each_with_index do |item, index|
       if computer.include?(item) && compare_hash[item] > 0 && feedback[index] == " "
         feedback[index] = 'wp'
@@ -121,6 +131,15 @@ class MasterMind
     new_guess
   end
 
+  def dec_initial_hash(hash, player)
+    player.each do |item|
+      if hash.key?(item) == true
+        hash[item] -= 1
+      end 
+    end
+    hash 
+  end
+
   def decrement_hash(computer, key)
     if computer.key?(key) == true
       computer[key] -= 1
@@ -153,7 +172,7 @@ class ExecuteMasterMind < MasterMind
 
   #for the computer guessing
   def make_comp_guesser(player_answer)
-    computer_response = gener_computer_answer
+    computer_response = gener_computer_guess
     first_comparison = compare_guess_answer(computer_response, player_answer)
     second_comparison = check_answer_position(first_comparison, player_answer, computer_response)
   end
@@ -187,7 +206,6 @@ class ExecuteMasterMind < MasterMind
   def continue_game(computer_answer)
     game_play = play_game(computer_answer)
     while @@max_guesses > 1
-      puts "this is max_guesses: #{@@max_guesses}"
       if game_play == computer_answer
         puts 'You have won the game!'
         exit
@@ -204,12 +222,6 @@ class ExecuteMasterMind < MasterMind
     end
   end
 end
-
-=begin
-my_game = ExecuteMasterMind.new
-computer_answ = my_game.gener_computer_answer
-my_game.continue_game(computer_answ)
-=end
 
 
 my_game = ExecuteMasterMind.new
