@@ -5,10 +5,11 @@ class MasterMind
   @@max_guesses = 12
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
-  attr_accessor :computer_guesses
+  attr_accessor :computer_guesses :comp_response
 
   def initialize
     @computer_guesses = []
+    @comp_response = []
   end
 
 
@@ -172,15 +173,15 @@ class ExecuteMasterMind < MasterMind
 
   #for the computer guessing
   def make_comp_guesser(player_answer)
-    computer_response = gener_computer_guess
-    first_comparison = compare_guess_answer(computer_response, player_answer)
-    second_comparison = check_answer_position(first_comparison, player_answer, computer_response)
+    @comp_response = gener_computer_guess
+    first_comparison = compare_guess_answer(@comp_response, player_answer)
+    second_comparison = check_answer_position(first_comparison, player_answer, @comp_response)
   end
 
   def make_second_compguess(player_answer, compguess)
-    computer_response = create_new_compguess(compguess)
-    first_comparison = compare_guess_answer(computer_response, player_answer)
-    second_comparison = check_answer_position(first_comparison, player_answer, computer_response)
+    @comp_response = create_new_compguess(compguess, @comp_response)
+    first_comparison = compare_guess_answer(@comp_response, player_answer)
+    second_comparison = check_answer_position(first_comparison, player_answer, @comp_response)
   end
 
   def compguess_game(player_answer)
