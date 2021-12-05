@@ -89,14 +89,9 @@ class MasterMind
   def check_answer_position(first_comp, computer, player)
     feedback = first_comp
     @computer_guesses.push(player)
-    #puts "initial feedback: #{feedback}"
-    puts "answ_to match: #{computer}"
-    #puts "comp_guess: #{player}"
     compare_hash = create_hash(computer)
     dec_initial_hash(compare_hash, player, computer)
-    #puts "dec_initial_hash(compare_hash, player): #{dec_initial_hash(compare_hash, player)}"
     player.each_with_index do |item, index|
-      puts "1st: #{computer.include?(item)} - 2nd: #{compare_hash[item]} - 3rd: #{feedback[index]}"
       if computer.include?(item) && compare_hash[item] > 0 && feedback[index] == " "
         feedback[index] = 'wp'
         decrement_hash(compare_hash, item)
@@ -123,8 +118,6 @@ class MasterMind
 
   def create_new_compguess(feedback, guess)
     wp_hash = {}
-    puts "initial_feedback: #{feedback}"
-    puts "comp_guess: #{guess}"
     feedback.each_with_index do |item, index|
       if wp_hash.key?(guess[index]) == false && feedback[index] == "wp"
         wp_hash[guess[index]] = []
@@ -133,19 +126,13 @@ class MasterMind
         wp_hash[guess[index]].push(index)
       end
     end
-    #puts "wp_hash: #{wp_hash}"
     feedback.each_with_index do |item, index|
-      diff_wp_color = wp_hash.select {|key, value| value.include?(index) == false}
+      diff_wp_color = wp_hash.select { |_key, value| value.include?(index) == false }
       if (feedback[index] == "wp" || feedback[index] == " ") && diff_wp_color.length > 0
         new_color_poss = diff_wp_color.keys
         new_color = new_color_poss[rand(new_color_poss.length)]
-        feedback[index] = new_color
-        #puts "new_color: #{new_color}"
-        #puts "wp_hash[new_color]: #{wp_hash[new_color]}"
-        #puts "diff_wp_color length: #{diff_wp_color.length}"
-        #puts "wp_hash[new_color].shift: #{wp_hash[new_color].shift}"
+        feedback[index] = new_color 
         wp_hash[new_color].shift
-        #puts "wp_hash[new_color].length: #{wp_hash[new_color].length}"
         if wp_hash[new_color].length == 0
           wp_hash.delete(new_color)
         end
@@ -172,7 +159,6 @@ class MasterMind
     end
     computer
   end
-
 end
 
 
@@ -196,22 +182,17 @@ class ExecuteMasterMind < MasterMind
     second_comparison = check_answer_position(first_comparison, computer_response, player_guess)
   end
 
-  #for the computer guessing
   def make_comp_guesser(player_answer)
     @comp_response = gener_computer_guess
-    #puts "initial comp guess: #{@comp_response}"
     first_comparison = compare_guess_answer(@comp_response, player_answer)
     second_comparison = check_answer_position(first_comparison, player_answer, @comp_response)
-    #puts "first feedback comp guess: #{second_comparison}"
     second_comparison
   end
 
   def make_second_compguess(player_answer, compguess)
     @comp_response = create_new_compguess(compguess, @comp_response)
-    #puts "comp_guess: #{@comp_response}"
     first_comparison = compare_guess_answer(@comp_response, player_answer)
     second_comparison = check_answer_position(first_comparison, player_answer, @comp_response)
-    #puts "ongoing comp guess: #{second_comparison}"
     second_comparison
   end
 
@@ -230,7 +211,7 @@ class ExecuteMasterMind < MasterMind
     end
     @@max_guesses -= 1
     if game_play != player_answer && @@max_guesses == 0
-      puts "line 127 - Computer has lost!"
+      puts "Computer has lost!"
       exit
     end
   end
@@ -250,7 +231,7 @@ class ExecuteMasterMind < MasterMind
     end
     @@max_guesses -= 1
     if game_play != computer_answer && @@max_guesses == 0
-      puts "line 127 - You Lost!"
+      puts "You Lost!"
       exit
     end
   end
