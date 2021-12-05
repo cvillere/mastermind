@@ -100,21 +100,6 @@ class MasterMind
     feedback
   end
 
-  def figure_comp_wp(num_index)
-    colors = ["red", "blue", "green", "purple", "orange", "yellow"]
-    previous_guesses = []
-    @computer_guesses.each_with_index do |item, index|
-      previous_guesses.push(@computer_guesses[index][num_index])
-    end
-    potential_guess = colors - previous_guesses
-    if potential_guess.length == 0
-      comp_color_new = colors[rand(6)]
-    else
-      comp_color_new = potential_guess[rand(potential_guess.length)]
-    end
-    comp_color_new
-  end
-
   def create_new_compguess(feedback, guess)
     wp_hash = {}
     feedback.each_with_index do |item, index|
@@ -136,7 +121,7 @@ class MasterMind
           wp_hash.delete(new_color)
         end
       elsif feedback[index] == " " && diff_wp_color.length == 0
-        feedback[index] = colors[rand(6)]
+        feedback[index] = @@colors[rand(6)]
       end
     end
     feedback
