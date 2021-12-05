@@ -51,12 +51,12 @@ class MasterMind
     puts "----------------------------------------------------------------------"
     puts "What is your guess?(ex. red blue green purple). Possible choices are: #{@@colors}"
     player_guess = gets.chomp
-    guess_format = /[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}/
-    while (player_guess =~ guess_format) == nil
-      puts 'Incorrect guess format! Please check guess & try again'
-      player_guess = gets.chomp.downcase
-    end
     player_guess = player_guess.split(" ").to_a
+    while player_guess.length != 4
+      puts 'Incorrect guess format! Please check input & try again'
+      player_guess = gets.chomp.downcase
+      player_guess = player_guess.split(" ").to_a
+    end
     player_guess
   end
 
@@ -64,12 +64,12 @@ class MasterMind
     puts "----------------------------------------------------------------------"
     puts "Please give an answer for computer to guess.(ex. red blue green purple). Possible choices are: #{@@colors}"
     player_guess = gets.chomp
-    guess_format = /[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}\s[a-zA-Z]{3,6}/
-    while (player_guess =~ guess_format) == nil
-      puts 'Incorrect answer format! Please check guess & try again'
-      player_guess = gets.chomp.downcase
-    end
     player_guess = player_guess.split(" ").to_a
+    while player_guess.length != 4
+      puts 'Incorrect answer format! Please check input & try again'
+      player_guess = gets.chomp.downcase
+      player_guess = player_guess.split(" ").to_a
+    end
     player_guess
   end
 
@@ -85,12 +85,13 @@ class MasterMind
     feedback_array
   end
 
-  #dec_initial_hash not working correctly
+
   def check_answer_position(first_comp, computer, player)
     feedback = first_comp
-    puts "initial feedback: #{feedback}"
+    @computer_guesses.push(player)
+    #puts "initial feedback: #{feedback}"
     puts "answ_to match: #{computer}"
-    puts "comp_guess: #{player}"
+    #puts "comp_guess: #{player}"
     compare_hash = create_hash(computer)
     dec_initial_hash(compare_hash, player, computer)
     #puts "dec_initial_hash(compare_hash, player): #{dec_initial_hash(compare_hash, player)}"
@@ -103,6 +104,21 @@ class MasterMind
     end
     puts "Your feedback: #{feedback}"
     feedback
+  end
+
+  def provide_new_color(num_index)
+    colors = ["red", "blue", "green", "purple", "orange", "yellow"]
+    previous_guesses = []
+    @computer_guesses.each_with_index do |item, index|
+      previous_guesses.push(@computer_guesses[index][num_index])
+    end
+    potential_guess = colors - previous_guesses
+    if potential_guess.length == 0
+      comp_color_new = colors[rand(6)]
+    else
+      comp_color_new = potential_guess[rand(potential_guess.length)]
+    end
+    comp_color_new
   end
 
   def create_new_compguess(feedback, guess)
@@ -134,7 +150,7 @@ class MasterMind
           wp_hash.delete(new_color)
         end
       elsif (feedback[index] == "wp" || feedback[index] == " ") && diff_wp_color.length == 0
-        feedback[index] = @@colors[rand(@@colors.length)]
+        feedback[index] = provide_new_color(index)
       end
     end
     puts "new_comp_guess: #{feedback}"
