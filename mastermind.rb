@@ -115,21 +115,31 @@ class MasterMind
     comp_color_new
   end
 
-  def create_new_compguess(feedback)
-    new_guess = []
+  def create_new_compguess(feedback, guess)
+    wp_hash = {}
     feedback.each_with_index do |item, index|
-      if feedback[index] == " "
-        new_guess.push(@@colors[rand(6)])
-  
-      elsif feedback[index] == "wp"
-        new_guess.push(figure_comp_wp(index))
-  
-      elsif @@colors.include?(item)
-        new_guess.push(item)
+      if wp_hash.key?(guess[index]) == false && feedback[index] == "wp"
+        wp_hash[guess[index]] = []
+        wp_hash[guess[index]].push(index)
+      elsif wp_hash.key?(guess[index]) == true && feedback[index] == "wp"
+        wp_hash[guess[index]].push(index)
       end
     end
-    @computer_guesses.push(new_guess)
-    new_guess
+    feedback.each_with_index do |item, index|
+      diff_wp_color = wp_hash.select {|key, value| value.include?(index) == false}
+      if feedback[index] == "wp" || feedback[index] == " " && diff_wp_color.length > 0
+        new_color_poss = diff_wp_color.keys
+        new_color = new_color_poss[rand(new_color_poss.length)]
+        feedback[index] = new_color
+        wp_hash[new_color].shift
+        if wp_hash[new_color].length == 0
+          wp_hash.delete(new_color)
+        end
+      elsif feedback[index] == " " && diff_wp_color.length == 0
+        feedback[index] = colors[rand(6)]
+      end
+    end
+    feedback
   end
 
   def dec_initial_hash(hash, player)
