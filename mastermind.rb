@@ -5,7 +5,7 @@ class MasterMind
   @@max_guesses = 12
   @@colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow']
 
-  attr_accessor :computer_guesses :comp_response
+  attr_accessor :computer_guesses, :comp_response
 
   def initialize
     @computer_guesses = []
@@ -85,23 +85,30 @@ class MasterMind
     feedback_array
   end
 
+  #dec_initial_hash not working correctly
   def check_answer_position(first_comp, computer, player)
     feedback = first_comp
+    puts "initial feedback: #{feedback}"
+    puts "answ_to match: #{computer}"
+    puts "comp_guess: #{player}"
     compare_hash = create_hash(computer)
-    dec_initial_hash(compare_hash, player)
+    dec_initial_hash(compare_hash, player, computer)
+    #puts "dec_initial_hash(compare_hash, player): #{dec_initial_hash(compare_hash, player)}"
     player.each_with_index do |item, index|
+      puts "1st: #{computer.include?(item)} - 2nd: #{compare_hash[item]} - 3rd: #{feedback[index]}"
       if computer.include?(item) && compare_hash[item] > 0 && feedback[index] == " "
         feedback[index] = 'wp'
         decrement_hash(compare_hash, item)
       end
     end
-    puts "----------------------------------------"
     puts "Your feedback: #{feedback}"
     feedback
   end
 
   def create_new_compguess(feedback, guess)
     wp_hash = {}
+    puts "initial_feedback: #{feedback}"
+    puts "comp_guess: #{guess}"
     feedback.each_with_index do |item, index|
       if wp_hash.key?(guess[index]) == false && feedback[index] == "wp"
         wp_hash[guess[index]] = []
@@ -110,26 +117,33 @@ class MasterMind
         wp_hash[guess[index]].push(index)
       end
     end
+    #puts "wp_hash: #{wp_hash}"
     feedback.each_with_index do |item, index|
       diff_wp_color = wp_hash.select {|key, value| value.include?(index) == false}
-      if feedback[index] == "wp" || feedback[index] == " " && diff_wp_color.length > 0
+      if (feedback[index] == "wp" || feedback[index] == " ") && diff_wp_color.length > 0
         new_color_poss = diff_wp_color.keys
         new_color = new_color_poss[rand(new_color_poss.length)]
         feedback[index] = new_color
+        #puts "new_color: #{new_color}"
+        #puts "wp_hash[new_color]: #{wp_hash[new_color]}"
+        #puts "diff_wp_color length: #{diff_wp_color.length}"
+        #puts "wp_hash[new_color].shift: #{wp_hash[new_color].shift}"
         wp_hash[new_color].shift
+        #puts "wp_hash[new_color].length: #{wp_hash[new_color].length}"
         if wp_hash[new_color].length == 0
           wp_hash.delete(new_color)
         end
-      elsif feedback[index] == " " && diff_wp_color.length == 0
-        feedback[index] = @@colors[rand(6)]
+      elsif (feedback[index] == "wp" || feedback[index] == " ") && diff_wp_color.length == 0
+        feedback[index] = @@colors[rand(@@colors.length)]
       end
     end
+    puts "new_comp_guess: #{feedback}"
     feedback
   end
 
-  def dec_initial_hash(hash, player)
-    player.each do |item|
-      if hash.key?(item) == true
+  def dec_initial_hash(hash, player, computer)
+    player.each_with_index do |item, index|
+      if hash.key?(item) == true && player[index] == computer[index]
         hash[item] -= 1
       end 
     end
@@ -169,14 +183,20 @@ class ExecuteMasterMind < MasterMind
   #for the computer guessing
   def make_comp_guesser(player_answer)
     @comp_response = gener_computer_guess
+    #puts "initial comp guess: #{@comp_response}"
     first_comparison = compare_guess_answer(@comp_response, player_answer)
     second_comparison = check_answer_position(first_comparison, player_answer, @comp_response)
+    #puts "first feedback comp guess: #{second_comparison}"
+    second_comparison
   end
 
   def make_second_compguess(player_answer, compguess)
     @comp_response = create_new_compguess(compguess, @comp_response)
+    #puts "comp_guess: #{@comp_response}"
     first_comparison = compare_guess_answer(@comp_response, player_answer)
     second_comparison = check_answer_position(first_comparison, player_answer, @comp_response)
+    #puts "ongoing comp guess: #{second_comparison}"
+    second_comparison
   end
 
   def compguess_game(player_answer)
@@ -207,6 +227,7 @@ class ExecuteMasterMind < MasterMind
         exit
       else
         @@max_guesses -= 1
+        puts '-----------------------------------------------------------'
         puts "your number of guesses remaining equals: #{@@max_guesses}"
       end
       game_play = play_game(computer_answer) 
