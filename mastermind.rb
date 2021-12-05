@@ -53,7 +53,7 @@ class MasterMind
     player_guess = gets.chomp
     player_guess = player_guess.split(" ").to_a
     while player_guess.length != 4
-      puts 'Incorrect guess format! Please check input & try again'
+      puts 'Incorrect answer format! Please check input & try again'
       player_guess = gets.chomp.downcase
       player_guess = player_guess.split(" ").to_a
     end
