@@ -205,6 +205,7 @@ class ExecuteMasterMind < MasterMind
         exit
       else
         @@max_guesses -= 1
+        puts '-----------------------------------------------------------'
         puts "computer's number of guesses remaining equals: #{@@max_guesses}"
       end
       game_play = make_second_compguess(player_answer, game_play) 
